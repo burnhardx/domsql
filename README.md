@@ -13,15 +13,11 @@
 
 ## Select
 
-Herbert
-
 ```js
 domsql.select.a.where
 ```
 
 ## Create
-
-Herbert
 
 ```js
 domsql.select.a.where
@@ -29,15 +25,12 @@ domsql.select.a.where
 
 ## Insert
 
-Herbert
-
 ```js
 domsql.select.a.where
 ```
 
 ## Update
 
-Herbert
 
 ```js
 domsql.select.a.where
@@ -45,7 +38,6 @@ domsql.select.a.where
 
 ## Delete
 
-Herbert
 
 ```js
 domsql.select.a.where
