@@ -1,0 +1,50 @@
+{
+  "name": "domsql",
+  "version": "0.0.1",
+  "description": "",
+  "main": "domsql.js",
+  "scripts": {
+    "test": "mocha --recursive",
+    "clean": "npm run clean:coverage && rm dist/domsql.min.js && rm showcase/domsql.min.js",
+    "clean:coverage": "rm -rf .nyc_output && rm -rf coverage",
+    "browserify": "browserify src/domsql.js -t [ babelify --presets [ es2015 ] ] -o dist/domsql.js",
+    "browserify:ugly": "browserify src/domsql.js -t [ babelify --presets [ es2015 ] ] | uglifyjs -c > dist/domsql.min.js",
+    "coverage": "npm run clean:coverage && nyc --reporter=html --reporter=text mocha",
+    "distribute": "cp dist/domsql.min.js showcase/",
+    "showcase": "node startShowcase.js",
+    "shipIt": "npm run coverage && npm run browserify:ugly && npm run distribute",
+    "deploy:fast": "npm run browserify && npm run distribute",
+    "deploy:ugly": "npm run browserify:ugly && npm run distribute",
+    "deploy:showcase": "npm run deploy:ugly && npm run showcase"
+  },
+  "nyc": {
+    "include": [
+      "src/*.js",
+      "src/commands/*.js"
+    ]
+  },
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  },
+  "author": "Bernhard Vollmer <burn.hard.x@gmail.com>",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^7.3.0",
+    "browserify": "^14.3.0",
+    "bulma": "^0.4.1",
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "cors": "^2.8.3",
+    "express": "^4.15.2",
+    "jsdom": "^10.0.0",
+    "mocha": "^3.3.0",
+    "nyc": "^10.3.0",
+    "uglify-js": "^2.8.22",
+    "uglifyify": "^3.0.4",
+    "webdriverio": "^4.8.0",
+    "zombie": "^5.0.5"
+  }
+}
