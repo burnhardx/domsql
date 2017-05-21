@@ -2,7 +2,7 @@
   "name": "domsql",
   "version": "0.0.1",
   "description": "",
-  "main": "domsql.js",
+  "main": "src/domsql.js",
   "scripts": {
     "test": "mocha --recursive",
     "clean": "npm run clean:coverage && rm dist/domsql.min.js && rm showcase/domsql.min.js",
