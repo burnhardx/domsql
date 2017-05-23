@@ -1,8 +1,4 @@
 let contentToUpdate;
-let scheme = require("./../htmlscheme");
-const allPossibleStyleAttributes=scheme.styles;
-const allPossibleEvents = scheme.events;
-const allPossibleAttributes = scheme.attributes;
 const updateContent = (content, attr)=>{
     contentToUpdate=content;
     return {
@@ -47,23 +43,60 @@ const updateEventListener = (event,handler)=>{
     }
 }
 
+var style={};
+var createStyleHandler = nameOfStyle =>{
+    return contentToUpdate=>{return updateStyle(contentToUpdate, nameOfStyle)};
+}
+var styleHandler ={
+    get(target, style) {
+        if(typeof target[style] == 'undefined'){
+            var result = createStyleHandler(style);
+            target[style]=result;
+            return result;
+        }else{
+            return target[style];
+        }
+    }
+}
+var events={};
+var createEventHandler = event=>{
+    return {
+        event: handler=> {return updateEventListener(event, handler);}
+    }
+}
+var eventHandler ={
+    get(target, event) {
+        if(typeof target[event] == 'undefined'){
+            var result = createEventHandler(event);
+            target[event]=result;
+            return result;
+        }else{
+            return target[event];
+        }
+    }
+};
+var attributes={};
+var createAttributeHandler = attr=>{
+    return {
+        set: contentToUpdate=>{return updateAttribute(attr, contentToUpdate)}
+    }
+}
+var attributeHandler ={
+    get(target, attr) {
+        if(typeof target[attr] == 'undefined'){
+            var result = createAttributeHandler(attr);
+            target[attr]=result;
+            return result;
+        }else{
+            return target[attr];
+        }
+    }
+};
+
 class Update {
     constructor(){
-        this.attribute={};
-        allPossibleAttributes.forEach(attr=>{
-            this.attribute[attr]={
-                set: contentToUpdate=>{return updateAttribute(attr, contentToUpdate)}
-            }
-        })
-        this.style={};
-        allPossibleStyleAttributes.forEach(attr=>{
-            this.style[attr]=contentToUpdate=>{return updateStyle(contentToUpdate, attr)}
-        })
-        allPossibleEvents.forEach(event=>{
-            this[event]={
-                event: handler=> {return updateEventListener(event, handler);}
-            }
-        })
+        this.attribute=new Proxy(attributes, attributeHandler);
+        this.style=new Proxy(style,styleHandler);
         this.set={
             innerHTML: contentToUpdate=>{return updateContent(contentToUpdate, 'innerHTML')},
             value: contentToUpdate=> {return updateContent(contentToUpdate, 'value')}
@@ -77,4 +110,4 @@ class Update {
 
 }
 
-module.exports= new Update();
+module.exports= new Proxy(new Update(), eventHandler);

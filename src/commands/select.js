@@ -1,49 +1,56 @@
-/**
- * TODO: Create fancy error wrapper
- */
-const transferResult = result =>{
-    return result.length == 0 ? undefined : result.length == 1 ? attachAfterAndBeforeHandler(result[0]) : attachAfterAndBeforeHandler(result);
-}
+const selectCommand = require("./searchInDOM");
 
-const attachAfterAndBeforeHandler = result=>{
-    const checkPosition = (beforeElement, expectedPosition) => {
-        if(Array.isArray(result)){
-            var filtered= result.filter(entry=>{
-                return entry.compareDocumentPosition(beforeElement)==expectedPosition;
-            });
-            return transferResult(filtered);
-        }else{
-            return result.compareDocumentPosition(beforeElement)==expectedPosition ? result : undefined;
+const createAttributeHandler= (tag,attr)=>{
+    return {
+        contains:query=>{
+            let result = selectCommand(tag, attr, '*=', query);
+            return result;
+        },
+        startsWith:query=>{
+            return selectCommand(tag, attr, '^⁼', query);
+        },
+        endsWith:query=>{
+            return selectCommand(tag, attr, '$=', query);
+        },
+        is:query=>{
+            return selectCommand(tag, attr, '=', query);
         }
     }
-    result.before = function(beforeElement){
-        return checkPosition(beforeElement,4);
-    }
-    result.after = function(beforeElement){
-        return checkPosition(beforeElement,2);
-    }
-    return result;
 }
 
-const searchByInnerHTML = (tagToSearch, query)=>  {
-    const tags = Array.from(document.getElementsByTagName(tagToSearch));
-    let result = tags.filter(tag => {
-        return tag.textContent.match(query) != null
-    });
-    return transferResult(result);
+const createTagHandler = tag=>{
+    const whereHandler = {
+        get(target, attribute) {
+            if(typeof target[attribute] == 'undefined'){
+                var result = createAttributeHandler(target.tag, attribute);
+                target[attribute]=result;
+                return result;
+            }else{
+                return target[attribute];
+            }
+        }
+    };
+    return {
+        all:function(){
+            return Array.from(document.getElementsByTagName(tag));
+        },
+        byInnerHTML: function(query){
+            return selectCommand(tag, query);
+        },
+        where: new Proxy({tag:tag}, whereHandler),
+        byId: query=>{return document.querySelector(tag+'[id='+query+']')}
+    };
 }
-
-const searchByAttributes = (tag, attr, operator, value)=>{
-    const selector = tag+"["+attr+operator+"'"+value+"']";
-    return transferResult(Array.from(document.querySelectorAll(selector)));
-}
-
-module.exports = function(){
-    if(arguments.length==2){
-        return searchByInnerHTML(arguments[0], arguments[1]);
-    }else if(arguments.length==4){
-        return searchByAttributes(arguments[0], arguments[1], arguments[2], arguments[3])
-    }else if(arguments.length==1){
-        return searchByInnerHTML('*', arguments[1]);
+var selectHandler = {
+    get(target, attribute) {
+        if(typeof target[attribute] == 'undefined'){
+            var result = createTagHandler(attribute);
+            target[attribute]=result;
+            return result;
+        }else{
+            return target[attribute];
+        }
     }
-};
+}
+
+module.exports = new Proxy({}, selectHandler);

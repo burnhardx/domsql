@@ -27,7 +27,6 @@ describe("Assert that DOMSQL can select nodes", () => {
     });
 
     it("by custom registered attributes", ()=>{
-        systemUnderTest.registerCustomAttribute('data-domsql');
         var spanByCustomAttribute=systemUnderTest.select.span.where['data-domsql'].is('custom attribute')
             .before(systemUnderTest.select.input.byId('query'));
         spanByCustomAttribute.textContent.should.equal('DOMSQL Select Query');
