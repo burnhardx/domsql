@@ -1,9 +1,27 @@
 # DOMSQL
-### Work the DOM like a DevOP
+### DOMSQL is set of commands in the style of SQL, to select, create, update, insert or delete DOM Nodes.
 
-**DOMSQL is tested with node 4.x.
+```js
+// Mock Browser
+const { JSDOM } = require("jsdom");
+global.document = new JSDOM('`<!DOCTYPE html><p class="important">DOMSQL Rulez</span></p>`').window.document;
 
-## Following SQL Commands are implemented and tested.
+var domsql = require('domsql');
+console.log(domsql.select.p.where.class.is('important').textContent);
+```
+
+## Installation
+
+### Debug
+```js
+<script src="https://raw.githubusercontent.com/burnhardx/domsql/master/dist/domsql.js"></script>
+```
+### Minified
+```js
+<script src="https://raw.githubusercontent.com/burnhardx/domsql/master/dist/domsql.min.js"></script>
+```
+
+## Following Commands are yet implemented.
 
 * [Select](#select)
 * [Create](#create)
@@ -14,31 +32,41 @@
 ## Select
 
 ```js
-domsql.select.a.where
+
+domsql.select.a.byId();
+domsql.select.a.byInnerHTML('regex');
+domsql.select.a.all();
+
+domsql.select.div.where[any attribute].is();
+domsql.select.span.where[any attribute].contains();
+domsql.select.table.where[any attribute].startsWith();
+domsql.select.ul.where[any attribute].endsWith();
+
+domsql.select.a.byInnerHTML('foo').before(domsql.select.a.byId('id');
 ```
 
 ## Create
 
 ```js
-domsql.select.a.where
+TODO
 ```
 
 ## Insert
 
 ```js
-domsql.select.a.where
+TODO
 ```
 
 ## Update
 
 
 ```js
-domsql.select.a.where
+TODO
 ```
 
 ## Delete
 
 
 ```js
-domsql.select.a.where
+TODO
 ```
