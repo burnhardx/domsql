@@ -48,25 +48,37 @@ domsql.select.a.byInnerHTML('foo').before(domsql.select.a.byId('id');
 ## Create
 
 ```js
-TODO
+domsql.create.h1.content('My Headline');
+domsql.create.div.id('content').with.class('important-stuff');
 ```
 
 ## Insert
 
 ```js
-TODO
+domsql.insert.into(domsql.select.div.byId('content')).values('text content');
+domsql.insert.into(domsql.select.div.byId('content')).values(domsql.create.p.content('New Paragraph'));
 ```
 
 ## Update
 
 
 ```js
-TODO
+domsql.update.set.innerHTML('new headline').where(domsql.select.h1.byInnerHTML('old headline'));
+domsql.update.set.value('secret').where(domsql.select.input.byId('password'));
+domsql.update.style.border('1px solid blue').where(domsql.select.p.all());
+domsql.update.attribute.row.set(5).where(domsql.select.textare.byId('userinput'));
+domsql.update.click.event(e=>{console.log('clicked')}).where(domsql.select.button.byId('clickbutton'));
+domsql.update.class.add('highlight').where(domsql.select.h1.where.class.is('no-highlight'));
+domsql.update.class.remove('highlight').where(domsql.select.h1.where.class.contains('highlight'));
+domsql.update.class.toggle('toggleClass').where(domsql.select.button.byId('mybutton'));
 ```
 
 ## Delete
 
 
 ```js
-TODO
+domsql.delete.behavior.nodesWillBeRemoved();
+domsql.delete.nodesWillDisappear();
+domsql.delete.nodesWillBeInvisible();
+domsql.delete.from(domsql.select.h1.byId('tempHeader'));
 ```
