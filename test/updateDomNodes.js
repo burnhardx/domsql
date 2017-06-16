@@ -32,6 +32,8 @@ describe("Assert that DOMSQL can update nodes", () => {
         var h1 = systemUnderTest.select.h1.byInnerHTML("Rulez");
         systemUnderTest.update.attribute.dropzone.set('ficken').where(h1);
         h1.getAttribute("dropzone").should.equal("ficken");
+
+
     })
 
     it("events", ()=>{
@@ -44,6 +46,18 @@ describe("Assert that DOMSQL can update nodes", () => {
         systemUnderTest.update.click.event(clickhandler).where(input);
         input.click();
         input.getAttribute('title').should.equal(testTextContent);
+    })
+
+    it("children", ()=>{
+        systemUnderTest.delete.behavior.nodesWillBeRemoved();
+        let content = systemUnderTest.create.div.id('children-content');
+        systemUnderTest.insert.intoBody(content);
+        let child = systemUnderTest.create.p.id('herbert').content('hallo');
+        systemUnderTest.update.children.add(child).where(content);
+        systemUnderTest.select.div.byId('children-content').childNodes[0].textContent.should.equal('hallo');
+        systemUnderTest.update.children.remove(child).where(content);
+        should.not.exist(systemUnderTest.select.div.byId('children-content').childNodes[0]);
+        systemUnderTest.delete.from(content);
     })
 
     it("classes", ()=>{

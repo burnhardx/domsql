@@ -97,6 +97,18 @@ class Update {
     constructor(){
         this.attribute=new Proxy(attributes, attributeHandler);
         this.style=new Proxy(style,styleHandler);
+        this.children={
+            add:child=>{
+                return {
+                    where: node=>{node.appendChild(child)}
+                }
+            },
+            remove:child=>{
+                return {
+                    where: node=>{node.removeChild(child)}
+                }
+            }
+        }
         this.set={
             innerHTML: contentToUpdate=>{return updateContent(contentToUpdate, 'innerHTML')},
             value: contentToUpdate=> {return updateContent(contentToUpdate, 'value')}
