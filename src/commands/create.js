@@ -29,7 +29,11 @@ const createNode = (tag, content)=>{
         return result;
     }
     result.content=textContent=>{
-        result.innerHTML = textContent;
+        result.textContent = textContent;
+        return result;
+    }
+    result.withChild=children=>{
+        result.appendChild(children);
         return result;
     }
     result.with = new Proxy({result:result}, withHandler);
