@@ -1,7 +1,7 @@
 var createWithHandler = (attribute, result) => {
-    return content => {
+    return attributeValue => {
         let att = document.createAttribute(attribute);
-        att.value = content;
+        att.value = attributeValue;
         result.setAttributeNode(att);
         return result;
     };
@@ -20,7 +20,6 @@ var withHandler = {
 };
 
 const createNode = (tag, content) => {
-    console.log("===> "+tag+ "--"+content);
     var result = document.createElement(tag);
     if (content != undefined) {
         result.innerHTML = content;
