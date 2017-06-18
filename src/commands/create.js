@@ -1,7 +1,7 @@
-var createWithHandler = (attribute,result) =>{
-    return content=>{
-        let att=document.createAttribute(attribute);
-        att.value=content;
+var createWithHandler = (attribute, result) => {
+    return content => {
+        let att = document.createAttribute(attribute);
+        att.value = content;
         result.setAttributeNode(att);
         return result;
     };
@@ -9,48 +9,54 @@ var createWithHandler = (attribute,result) =>{
 
 var withHandler = {
     get(target, attr) {
-        if(typeof target[attr] == 'undefined'){
-            var result = createWithHandler(attr,target.result);
-            target[attr]=result;
+        if (typeof target[attr] == 'undefined') {
+            var result = createWithHandler(attr, target.result);
+            target[attr] = result;
             return result;
-        }else{
+        } else {
             return target[attr];
         }
     }
 };
 
-const createNode = (tag, content)=>{
+const createNode = (tag, content) => {
     var result = document.createElement(tag);
-    if(content!=undefined){
-        result.appendChild(document.createTextNode(content));
+    if (content != undefined) {
+        result.innerHTML = content;
+        //result.appendChild(document.createTextNode(content));
     }
-    result.withValue =inputValue=>{
+    result.withValue = inputValue => {
         result.value = inputValue;
         return result;
     }
-    result.content=textContent=>{
-        result.textContent = textContent;
+    result.content = textContent => {
+        result.innerHTML = textContent;
         return result;
     }
-    result.withChild=children=>{
+    result.withChild = children => {
         result.appendChild(children);
         return result;
     }
-    result.with = new Proxy({result:result}, withHandler);
+    result.with = new Proxy({result: result}, withHandler);
     return result;
 }
 
-var createTagHandler = tag =>{
+var createTagHandler = tag => {
     return {
-        id: domId=>{
+        id: domId => {
             var result = createNode(tag);
-            result.setAttribute("id",domId);
+            result.setAttribute("id", domId);
             return result;
         },
-        content:textContent=>{
+        styleClass: initClass => {
+            var result = createNode(tag);
+            result.classList.add(initClass);
+            return result;
+        },
+        content: textContent => {
             return createNode(tag, textContent);
         },
-        empty:()=>{
+        empty: () => {
             return createNode(tag);
         }
     }
@@ -58,11 +64,11 @@ var createTagHandler = tag =>{
 
 var tagHandler = {
     get(target, tag) {
-        if(typeof target[tag] == 'undefined'){
+        if (typeof target[tag] == 'undefined') {
             var result = createTagHandler(tag);
-            target[tag]=result;
+            target[tag] = result;
             return result;
-        }else{
+        } else {
             return target[tag];
         }
     }

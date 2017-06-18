@@ -27,6 +27,13 @@ describe("Assert that created Nodes", () => {
         systemUnderTest.select.h1.byInnerHTML(title).textContent.should.equal(title);
     })
 
+    it("can create node with initial classes and insert to dom", () => {
+        let heroHeadline = systemUnderTest.create.h1.styleClass('hero').content(title);
+        systemUnderTest.insert.into(systemUnderTest.select.div.byId('sampleContent')).values(heroHeadline);
+
+        systemUnderTest.select.h1.where.class.is('hero').textContent.should.equal(title);
+    })
+
     it("can create node with ids and insert to dom", () => {
         const testId = "molotov"
         let heroHeadline = systemUnderTest.create.h1.id(testId).content(title);
@@ -35,7 +42,7 @@ describe("Assert that created Nodes", () => {
     })
     it("can create node with children insert to dom", () => {
         const testId = "molotov"
-        let children = systemUnderTest.create.span.id('child').content('children');
+        let children = systemUnderTest.create.span.id('child').with.class('herbert').content('children');
         let heroHeadline = systemUnderTest.create.h1.id(testId).content(title)
             .withChild(
                 children
