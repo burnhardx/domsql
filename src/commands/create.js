@@ -20,6 +20,7 @@ var withHandler = {
 };
 
 const createNode = (tag, content) => {
+    console.log("===> "+tag+ "--"+content);
     var result = document.createElement(tag);
     if (content != undefined) {
         result.innerHTML = content;
